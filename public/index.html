@@ -4,6 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Angular Material style sheet -->
     <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css"> -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+
 </head>
 
 <body ng-app="TestApp" ng-cloak>
@@ -25,15 +27,19 @@
     <!-- Your application bootstrap  -->
     <script type="text/javascript">
         angular.module('TestApp', ['ngMessages', 'angularJsDatePicker'])
-            .controller("TestController", ["$scope", function ($scope) {
+            .controller("TestController", ["$scope", "moment",function ($scope, moment) {
                 console.log("TestController");
-                $scope.selectedDateTest = new Date("2019-02-12T00:00:00.000Z");
+                // $scope.selectedDateTest = new Date("2019-02-12T00:00:00.000Z");
+                $scope.minDate = new Date("2018-07-15");
+                $scope.getFormattedDate = function(){
+                    return $scope.selectedDateTest ? moment($scope.selectedDateTest).format("Do MMMM, YYYY") : "-";
+                };
             }]);
     </script>
     <div ng-controller="TestController">
         <div>test</div>
-        {{selectedDateTest}}
-        <div aj-datepicker selected-date="selectedDateTest">inside</div>
+        <div style="/*margin-top:300px; margin-left:1250px;*/" aj-datepicker selected-date="selectedDateTest" min-date="minDate">{{getFormattedDate()}}</div>
+        <div>next content</div>
     </div>
 
 </body>
