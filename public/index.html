@@ -27,19 +27,30 @@
     <!-- Your application bootstrap  -->
     <script type="text/javascript">
         angular.module('TestApp', ['ngMessages', 'angularJsDatePicker'])
-            .controller("TestController", ["$scope", "moment",function ($scope, moment) {
+            .controller("TestController", ["$scope", "moment", function ($scope, moment) {
                 console.log("TestController");
                 // $scope.selectedDateTest = new Date("2019-02-12T00:00:00.000Z");
                 $scope.minDate = new Date("2018-07-15");
-                $scope.getFormattedDate = function(){
-                    return $scope.selectedDateTest ? moment($scope.selectedDateTest).format("Do MMMM, YYYY") : "-";
+                $scope.getFormattedDate = function () {
+                    return $scope.selectedDateTest ? moment($scope.selectedDateTest).format("Do MMMM, YYYY") :
+                        "-";
+                };
+                $scope.onDateSelected = function () {
+                    console.log("on date selected");
                 };
             }]);
     </script>
     <div ng-controller="TestController">
         <div>test</div>
-        <div style="/*margin-top:300px; margin-left:1250px;*/" aj-datepicker selected-date="selectedDateTest" min-date="minDate">{{getFormattedDate()}}</div>
+        <input type="text" />
+        <div tabindex="0" class="datepicker" style="/*margin-top:300px; margin-left:1250px;*/" aj-datepicker selected-date="selectedDateTest"
+            min-date="minDate" on-date-selected="onDateSelected()">{{getFormattedDate()}}</div>
         <div>next content</div>
+        <style>
+            .datepicker:focus {
+                background-color: red;
+            }
+        </style>
     </div>
 
 </body>

@@ -25,6 +25,7 @@
             console.log(scope.selectedDate);
             $event.stopPropagation();
             scope.hidePopover();
+            scope.onDateSelected();
         };
 
         scope.getDate = function (date) {
@@ -86,7 +87,8 @@
                     selectedDate: "=",
                     minDate: "=",
                     maxDate: "=",
-                    hidePopover:"&"
+                    hidePopover: "&",
+                    onDateSelected: "&"
                 },
                 template: `
                 <div class="aj_monthly_container">
@@ -133,13 +135,13 @@
                     selectedDate: "=",
                     minDate: "=",
                     maxDate: "=",
-                    onDateSelect: "&"
+                    onDateSelected: "&"
                 },
                 transclude: true,
                 template: `
                 <span ng-transclude class="aj_datepicker_element"></span>
                 <div class="aj_datepicker_backdrop" ng-if="show" ng-click="hidePopover()"></div>
-                <div aj-datepicker-popup ng-show="show" hide-popover="hidePopover()" class="aj_datepicker_popup" selected-date="selectedDate" min-date="minDate" max-date="maxDate">
+                <div aj-datepicker-popup ng-show="show" hide-popover="hidePopover()" on-date-selected="onDateSelected()" class="aj_datepicker_popup" selected-date="selectedDate" min-date="minDate" max-date="maxDate">
                 </div>`,
                 link: function (scope, elem) {
                     scope.position = {};
@@ -173,18 +175,38 @@
                         }
                     };
 
-                    angular.element(element).on("click", function () {
+                    scope.showPopover = function () {
                         scope.$apply(function () {
                             scope.show = true;
                             $timeout(function () {
                                 positionThePopup();
                             });
                         });
+                    };
+
+                    angular.element(element).on("click", function () {
+                        scope.showPopover();
                     });
+
+                    angular.element(elem).on("focus", function () {
+                        scope.showPopover();
+                    });
+
+                    angular.element(elem).on("blur", function () {
+                        scope.$apply(function () {
+                            scope.hidePopover();
+                        });
+                    });
+
+                    scope.$on('$destroy', function () {
+                        angular.element(element).off("click");
+                        angular.element(elem).off("blur");
+                        angular.element(elem).off("focus");
+                    });
+
                     scope.hidePopover = function () {
                         scope.show = false;
                     };
-
                 }
             };
         }
